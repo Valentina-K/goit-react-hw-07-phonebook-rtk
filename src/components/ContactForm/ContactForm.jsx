@@ -2,19 +2,19 @@ import { useState } from 'react';
 import { customAlphabet } from 'nanoid';
 import { useDispatch, useSelector } from 'react-redux';
 import Form from './ContactForm.styled';
-import { addContact } from 'redux/contactSlice';
-import { getContacts } from 'redux/selectors';
+import { addContact } from 'redux/operations';
+import { selectContacts } from 'redux/selectors';
 
 const nanoid = customAlphabet('1234567890id-', 5);
 
 const ContactForm = () => {
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phone, setPhone] = useState('');
   const dispatch = useDispatch();
-  const contacts = useSelector(getContacts);
+  const contacts = useSelector(selectContacts);
 
   const nameInput = nanoid();
-  const numberInput = nanoid();
+  const phoneInput = nanoid();
 
   const handleChange = evt => {
     const { name, value } = evt.target;
@@ -22,8 +22,8 @@ const ContactForm = () => {
       case 'name':
         setName(value);
         break;
-      case 'number':
-        setNumber(value);
+      case 'phone':
+        setPhone(value);
         break;
       default:
         return;
@@ -31,13 +31,13 @@ const ContactForm = () => {
   };
   const reset = () => {
     setName('');
-    setNumber('');
+    setPhone('');
   };
 
   const handleSubmit = evt => {
     evt.preventDefault();
     if (!contacts.some(contact => contact.name === name)) {
-      dispatch(addContact({ id: nanoid(), name, number }));
+      dispatch(addContact({ name, phone }));
     } else {
       alert(`${name} is already in contacts`);
     }
@@ -60,15 +60,15 @@ const ContactForm = () => {
         />
       </div>
       <div>
-        <label htmlFor={numberInput}>Number</label>
+        <label htmlFor={phoneInput}>Number</label>
         <input
           type="tel"
-          name="number"
-          value={number}
+          name="phone"
+          value={phone}
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
-          id={numberInput}
+          id={phoneInput}
           onChange={handleChange}
         />
       </div>

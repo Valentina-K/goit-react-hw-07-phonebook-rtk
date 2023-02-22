@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Item } from './Contact.styled';
-const Contact = ({ name, number, children }) => (
+const Contact = ({ name, phone, children }) => (
   <Item>
     <span>
-      {name}: {number}
+      {name}: {phone}
     </span>
     {children}
   </Item>
@@ -13,7 +13,7 @@ const Contact = ({ name, number, children }) => (
 Contact.protoTypes = {
   children: PropTypes.node.isRequired,
   name: PropTypes.string.isRequired,
-  number: PropTypes.string.isRequired,
+  phone: PropTypes.string.isRequired,
 };
 
 export default Contact;
