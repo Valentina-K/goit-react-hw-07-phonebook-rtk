@@ -1,17 +1,20 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { Item } from './Contact.styled';
-const Contact = ({ name, phone, children }) => (
-  <Item>
-    <span>
-      {name}: {phone}
-    </span>
-    {children}
-  </Item>
-);
+import { useDispatch } from 'react-redux';
+import { deleteContact } from 'redux/operations';
+const Contact = ({ name, phone, id }) => {
+  const dispatch = useDispatch();
+  return (
+    <Item>
+      <span>
+        {name}: {phone}
+      </span>
+      <button onClick={() => dispatch(deleteContact(id))}>Delete</button>
+    </Item>
+  );
+};
 
 Contact.protoTypes = {
-  children: PropTypes.node.isRequired,
   name: PropTypes.string.isRequired,
   phone: PropTypes.string.isRequired,
 };
