@@ -10,35 +10,41 @@ const handleRejected = (state, action) => {
   state.error = action.payload;
 };
 
+function isPendingAction(action) {
+  return action.type.endsWith('pending')
+}
+
+function isRejectedAction(action) {
+  return action.type.endsWith('rejected')
+}
+
 export const contactsSlice = createSlice({
     name: 'contacts',
     initialState: {
         items:[],
         isLoading: false,
         error: null,},
-    extraReducers: {
-        [fetchContacts.pending]:handlePending,
-        [fetchContacts.fulfilled](state, action) {
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchContacts.fulfilled,(state, action)=> {
             state.isLoading = false;
             state.error = null;
             state.items = action.payload;
-        },
-        [fetchContacts.rejected]: handleRejected,
-        [addContact.pending]:handlePending,
-        [addContact.fulfilled](state, action) {  
+            })
+            .addCase(addContact.fulfilled,(state, action)=> {  
             state.isLoading = false;
             state.error = null;
             state.items.push(action.payload);
-            },          
-        [addContact.rejected]: handleRejected,
-        [deleteContact.pending]:handlePending,
-        [deleteContact.fulfilled](state, action) {
+            })
+            .addCase(deleteContact.fulfilled,(state, action)=> {
             state.isLoading = false;
             state.error = null;
             const index = state.items.findIndex(item => item.id === action.payload);
             state.items.splice(index, 1);
-        }, 
-        [deleteContact.rejected]:handleRejected,
+            })
+            .addMatcher(isRejectedAction, handleRejected)
+            .addMatcher(isPendingAction,handlePending)
+            .addDefaultCase(state => state)      
     }
 });
 
